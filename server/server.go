@@ -65,7 +65,7 @@ func readerShortLived(conn *websocket.Conn, timeout int, id uuid.UUID) {
 				log.Println(err)
 				return
 			}
-			log.Printf("%s: Client %s still connected", time.Now().Format("2006-01-02 15:04:05.000"), id)
+			log.Printf("Client %s still connected\n", id)
 			if err := conn.WriteMessage(messageType, p); err != nil {
 				log.Println(err)
 				return
@@ -116,7 +116,8 @@ func setupRoutes() {
 
 func main() {
 	port := ":8080"
-	fmt.Printf("Starting server on *%s\n", port)
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
+	log.Printf("Starting server on *%s\n", port)
 	setupRoutes()
 	log.Fatal(http.ListenAndServe(port, nil))
 }

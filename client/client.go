@@ -114,16 +114,8 @@ func main() {
 		Parallel:   *parallel,
 	}
 
-	log.SetFlags(0)
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	var wg sync.WaitGroup
-
-	if details.Parallel > 1 {
-		launchParallelConnections(&wg, details)
-	}
-
-	if details.Parallel == 1 {
-		createConnection(details)
-	}
-
+	launchParallelConnections(&wg, details)
 	wg.Wait()
 }
