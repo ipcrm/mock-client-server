@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -115,9 +117,13 @@ func setupRoutes() {
 }
 
 func main() {
-	port := ":8080"
+	port := flag.Int("port", 8080, "http service port")
+	addr := flag.String("addr", "*", "http service address")
+	flag.Parse()
+
+	serviceAddress := fmt.Sprintf("%s:%d", *addr, *port)
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
-	log.Printf("Starting server on *%s\n", port)
+	log.Printf("Starting server on %s\n", serviceAddress)
 	setupRoutes()
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(strings.ReplaceAll(serviceAddress, "*", ""), nil))
 }
