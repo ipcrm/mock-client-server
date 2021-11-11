@@ -41,7 +41,7 @@ func reader(conn *websocket.Conn, id uuid.UUID) {
 }
 
 // Reader for short-term conns
-func readerShortLived(conn *websocket.Conn, timeout int, id uuid.UUID) {
+func readerShortLived(conn *websocket.Conn, timeout float64, id uuid.UUID) {
 	timeOut := time.Duration(timeout) * time.Second
 	queryCtx, cancel := context.WithTimeout(context.Background(), timeOut)
 	defer cancel()
@@ -92,7 +92,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	if timeout != nil {
-		timeoutInt, err := strconv.Atoi(timeout[0])
+		timeoutInt, err := strconv.ParseFloat(timeout[0], 64)
 		if err != nil {
 			w.WriteHeader(500)
 			if _, err := w.Write([]byte("Cannot parse timeout value!")); err != nil {

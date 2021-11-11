@@ -70,7 +70,7 @@ func createConnection(details *ConnDetails) {
 
 	u := url.URL{Scheme: "ws", Host: details.Address, Path: "/ws"}
 	if details.Duration > 0 {
-		u.RawQuery = fmt.Sprintf("timeout=%d", details.Duration)
+		u.RawQuery = fmt.Sprintf("timeout=%f", details.Duration)
 	}
 
 	// Reconnect as many times as connections are set
@@ -91,7 +91,7 @@ func launchParallelConnections(wg *sync.WaitGroup, details *ConnDetails) {
 
 type ConnDetails struct {
 	Address    string
-	Duration   int
+	Duration   float64
 	Reconnects int
 	Parallel   int
 }
@@ -104,8 +104,8 @@ type ConnDetails struct {
 func main() {
 	addr := flag.String("addr",
 		util.EnvString("ADDR", "localhost:8080"), util.HelpString("http service address", "ADDR"))
-	duration := flag.Int("duration",
-		util.EnvInt("DURATION", 0), util.HelpString("duration in seconds of each connection. 0 is forver (and the default)", "DURATION"))
+	duration := flag.Float64("duration",
+		util.EnvFloat64("DURATION", 0.0), util.HelpString("duration in seconds (float) of each connection. 0 is forver (and the default)", "DURATION"))
 	reconnects := flag.Int("reconnects", util.EnvInt("RECONNECTS", 1),
 		util.HelpString("how many times to reconnect befor quitting", "RECONNECTS"))
 	parallel := flag.Int("parallel",
