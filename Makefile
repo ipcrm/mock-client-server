@@ -3,7 +3,10 @@ default: ci
 ci: lint fmt-check imports-check
 
 # Tooling versions
+GOLANGCILINTVERSION?=1.23.8
+GOIMPORTSVERSION?=v0.1.2
 GOXVERSION?=v1.0.1
+GOTESTSUMVERSION?=v1.6.4
 CGO_ENABLED?=0
 export CGO_ENABLED
 
