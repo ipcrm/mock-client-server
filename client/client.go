@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/ipcrm/mock-client-server/util"
 )
 
 func makeConnection(u url.URL, interrupt chan os.Signal) {
@@ -101,10 +102,14 @@ type ConnDetails struct {
 // - Long term connection
 // - Client controls duration via url param
 func main() {
-	addr := flag.String("addr", "localhost:8080", "http service address")
-	duration := flag.Int("duration", 0, "duration in seconds of each connection. 0 is forver")
-	reconnects := flag.Int("reconnects", 1, "how many times to reconnect befor quitting")
-	parallel := flag.Int("parallel", 1, "how many connections to make in parallel")
+	addr := flag.String("addr",
+		util.EnvString("ADDR", "localhost:8080"), util.HelpString("http service address", "ADDR"))
+	duration := flag.Int("duration",
+		util.EnvInt("DURATION", 0), util.HelpString("duration in seconds of each connection. 0 is forver (and the default)", "DURATION"))
+	reconnects := flag.Int("reconnects", util.EnvInt("RECONNECTS", 1),
+		util.HelpString("how many times to reconnect befor quitting", "RECONNECTS"))
+	parallel := flag.Int("parallel",
+		util.EnvInt("PARALLEL", 1), util.HelpString("how many connections to make in parallel", "PARALLEL"))
 	flag.Parse()
 
 	details := &ConnDetails{

@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/ipcrm/mock-client-server/util"
 )
 
 var upgrader = websocket.Upgrader{
@@ -117,8 +118,10 @@ func setupRoutes() {
 }
 
 func main() {
-	port := flag.Int("port", 8080, "http service port")
-	addr := flag.String("addr", "*", "http service address")
+	port := flag.Int("port",
+		util.EnvInt("PORT", 8080), util.HelpString("http service port", "PORT"))
+	addr := flag.String("addr",
+		util.EnvString("ADDR", "*"), util.HelpString("http service address", "ADDR"))
 	flag.Parse()
 
 	serviceAddress := fmt.Sprintf("%s:%d", *addr, *port)
